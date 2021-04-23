@@ -24,9 +24,9 @@ class UpdatePutRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'title' => 'sometimes|string|max:255',
-            // 'description' => 'sometimes',
-            // 'image' => 'sometimes|image|mimes:png,jpg|max:2048'
+            'title' => 'sometimes|string|max:255',
+            'description' => 'sometimes',
+            'image' => 'sometimes|image|mimes:png,jpg|max:2048'
         ];
     }
 }

@@ -18,15 +18,18 @@ use App\Http\Controllers\PostController;
 
 Route::middleware(['api'])->group(function () {
     Route::prefix('auth')->group(function () {
-        Route::post('login', [AuthController::class, 'login'])->name('login');
-        Route::post('register', [AuthController::class, 'register'])->name('register');
-        Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-        Route::get('profile', [AuthController::class, 'profile'])->name('profile');
-        Route::post('refresh',[AuthController::class, 'refresh'])->name('refresh');
+        Route::post('login', [AuthController::class, 'login']);
+        Route::post('register', [AuthController::class, 'register']);
+        Route::post('logout', [AuthController::class, 'logout']);
+        Route::get('profile', [AuthController::class, 'profile']);
+        Route::post('refresh',[AuthController::class, 'refresh']);
     });
 
-    Route::prefix('post')->group(function () {
-        Route::post('store', [PostController::class, 'store'])->name('post.store');
-        Route::put('update/{id}', [PostController::class, 'update'])->name('post.update');
+    Route::prefix('posts')->group(function () {
+        Route::get('index', [PostController::class, 'index']);
+        Route::post('store', [PostController::class, 'store']);
+        Route::put('update/{id}', [PostController::class, 'update']);
+        Route::get('show/{id}', [PostController::class, 'show']);
     });
+   
 });

@@ -16,8 +16,42 @@ class PostController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function store(StorePostRequest $request)
+    public function index()
     {
+        $posts = Post::where('user_id', Auth::user()->id)->get();
+        if(count($posts) > 0 )
+        {
+            return response()->json([
+                'error' => false,
+                'message' => $posts
+            ]);
+        } else {
+            return response()->json([
+                'error' => false,
+                'message' => "You have no Post"
+            ]);
+        }
+    }
+
+    public function show($id)
+    {
+        $post = Post::where('id', $id)->where('user_id', Auth::user()->id)->get();
+        if(count($post) == 1)
+        {
+            return response()->json([
+                'error' => false,
+                'message' => $post
+            ]);
+        } else {
+            return response()->json([
+                'error' => true,
+                'message' => "Unauthorized Access"
+            ]);
+        }
+    }
+
+    public function store(StorePostRequest $request)
+    { 
         $image = $request->file('image')->store('postImages');
         $post = new Post();
         $post->user_id = Auth::user()->id;
@@ -25,7 +59,6 @@ class PostController extends Controller
         $post->description = $request->description;
         $post->image = $image;
         $post->save();
-
         return response()->json([
             'error' => false,
             "message" => "Post Created Successfully"
@@ -34,27 +67,26 @@ class PostController extends Controller
 
     public function update(UpdatePutRequest $request, $id)
     {
-        dd($request->all());
-        // $post = Post::findOrFail($id);   
-        // if(Auth::user()->id == $post->user_id)
-        // {
-        //     if ($request->hasFile('image'))
-        //     {
-        //         Storage::delete($request->image);
-        //         $post->image = $request->file('image')->store('postImages');
-        //     }
-        //     $post->title = $request->title;
-        //     $post->description = $request->description;
-        //     $post->update();   
-        //     return response()->json([
-        //         'error' => false,
-        //         'message' => 'Post Updated Successfully'
-        //     ], 200);
-        // } else {
-        //     return response()->json([
-        //         'error' => true,
-        //         'message' => 'Unauthorized Access'
-        //     ]);
-        // }
+        $posts = Post::findOrFail($id);   
+        if(Auth::user()->id == $posts->user_id)
+        {
+            if ($request->hasFile('image'))
+            {
+                Storage::delete($posts->image);
+                $posts->image = $request->file('image')->store('postImages');
+            }
+            $posts->title = $request->title;
+            $posts->description = $request->description;
+            $posts->update();   
+            return response()->json([
+                'error' => false,
+                'message' => 'Post Updated Successfully'
+            ], 200);
+        } else {
+            return response()->json([
+                'error' => true,
+                'message' => 'Unauthorized Access'
+            ]);
+        }
     }
 }
