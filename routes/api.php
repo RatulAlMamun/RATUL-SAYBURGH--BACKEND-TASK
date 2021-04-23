@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ReplyController;
+use App\Http\Controllers\TagController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,10 +49,10 @@ Route::middleware(['api'])->group(function () {
         Route::delete('destroy/{id}', [ReplyController::class, 'destroy']);
     });
 
-    // Route::prefix('tags')->group(function () {
-    //     Route::get('index', [TagController::class, 'index']);
-    //     Route::post('store', [TagController::class, 'store']);
-    //     Route::put('update/{id}', [TagController::class, 'update']);
-    //     Route::delete('destroy/{id}', [TagController::class, 'destroy']);
-    // });
+    Route::prefix('tags')->group(function () {
+        Route::get('index', [TagController::class, 'index']);
+        Route::post('store', [TagController::class, 'store']);
+        Route::put('update/{id}', [TagController::class, 'update']);
+        Route::delete('destroy/{id}', [TagController::class, 'destroy']);
+    });
 });

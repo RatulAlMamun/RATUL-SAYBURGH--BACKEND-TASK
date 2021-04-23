@@ -62,7 +62,7 @@ class CommentController extends Controller
                 $comment->update();   
                 return response()->json([
                     'error' => false,
-                    'message' => 'Post Updated Successfully'
+                    'message' => 'Comment Updated Successfully'
                 ], 200);
             } else {
                 return response()->json([

@@ -72,7 +72,7 @@ class PostController extends Controller
     }
 
     public function store(StorePostRequest $request)
-    { 
+    {
         $image = $request->file('image')->store('postImages');
         $post = new Post();
         $post->user_id = Auth::user()->id;
@@ -80,6 +80,7 @@ class PostController extends Controller
         $post->description = $request->description;
         $post->image = $image;
         $post->save();
+        $post->tags()->sync($request->tags);
         return response()->json([
             'error' => false,
             "message" => "Post Created Successfully"
