@@ -23,6 +23,10 @@ class PostController extends Controller
         foreach ($posts as $post)
         {
             $post->comments;
+            foreach($post->comments as $comment)
+            {
+                $comment->replies;
+            }
         }
         if(count($posts) > 0 )
         {
@@ -43,6 +47,10 @@ class PostController extends Controller
         try {
             $post = Post::where('id', $id)->where('user_id', Auth::user()->id)->firstOrFail();
             $post->comments;
+            foreach($post->comments as $comment)
+            {
+                $comment->replies;
+            }
             if($post)
             {
                 return response()->json([

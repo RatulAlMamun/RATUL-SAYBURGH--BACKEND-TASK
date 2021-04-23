@@ -43,16 +43,15 @@ Route::middleware(['api'])->group(function () {
     });
 
     Route::prefix('replies')->group(function () {
-        // Route::post('index', [CommentController::class, 'index']);
         Route::post('store', [ReplyController::class, 'store']);
-        // Route::put('update/{id}', [PostController::class, 'update']);
-        // Route::delete('destroy/{id}', [PostController::class, 'destroy']);
+        Route::put('update/{id}', [ReplyController::class, 'update']);
+        Route::delete('destroy/{id}', [ReplyController::class, 'destroy']);
     });
 
     // Route::prefix('tags')->group(function () {
-    //     Route::get('index', [PostController::class, 'index']);
-    //     Route::post('store', [PostController::class, 'store']);
-    //     Route::put('update/{id}', [PostController::class, 'update']);
-    //     Route::delete('destroy/{id}', [PostController::class, 'destroy']);
+    //     Route::get('index', [TagController::class, 'index']);
+    //     Route::post('store', [TagController::class, 'store']);
+    //     Route::put('update/{id}', [TagController::class, 'update']);
+    //     Route::delete('destroy/{id}', [TagController::class, 'destroy']);
     // });
 });
