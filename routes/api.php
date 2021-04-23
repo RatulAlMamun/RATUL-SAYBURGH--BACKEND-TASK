@@ -3,7 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ReplyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,4 +35,24 @@ Route::middleware(['api'])->group(function () {
         Route::delete('destroy/{id}', [PostController::class, 'destroy']);
     });
    
+    Route::prefix('comments')->group(function () {
+        Route::get('index', [CommentController::class, 'index']);
+        Route::post('store', [CommentController::class, 'store']);
+        Route::put('update/{id}', [CommentController::class, 'update']);
+        Route::delete('destroy/{id}', [CommentController::class, 'destroy']);
+    });
+
+    Route::prefix('replies')->group(function () {
+        // Route::post('index', [CommentController::class, 'index']);
+        Route::post('store', [ReplyController::class, 'store']);
+        // Route::put('update/{id}', [PostController::class, 'update']);
+        // Route::delete('destroy/{id}', [PostController::class, 'destroy']);
+    });
+
+    // Route::prefix('tags')->group(function () {
+    //     Route::get('index', [PostController::class, 'index']);
+    //     Route::post('store', [PostController::class, 'store']);
+    //     Route::put('update/{id}', [PostController::class, 'update']);
+    //     Route::delete('destroy/{id}', [PostController::class, 'destroy']);
+    // });
 });

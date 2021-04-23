@@ -7,6 +7,7 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePutRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
+use Exception;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
@@ -19,6 +20,10 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::where('user_id', Auth::user()->id)->get();
+        foreach ($posts as $post)
+        {
+            $post->comments;
+        }
         if(count($posts) > 0 )
         {
             return response()->json([
@@ -35,17 +40,25 @@ class PostController extends Controller
 
     public function show($id)
     {
-        $post = Post::where('id', $id)->where('user_id', Auth::user()->id)->get();
-        if(count($post) == 1)
-        {
-            return response()->json([
-                'error' => false,
-                'message' => $post
-            ]);
-        } else {
+        try {
+            $post = Post::where('id', $id)->where('user_id', Auth::user()->id)->firstOrFail();
+            $post->comments;
+            if($post)
+            {
+                return response()->json([
+                    'error' => false,
+                    'message' => $post,
+                ]);
+            } else {
+                return response()->json([
+                    'error' => true,
+                    'message' => "Unauthorized Access"
+                ]);
+            }
+        } catch(Exception $e) {
             return response()->json([
                 'error' => true,
-                'message' => "Unauthorized Access"
+                'message' => $e->getMessage(),
             ]);
         }
     }
