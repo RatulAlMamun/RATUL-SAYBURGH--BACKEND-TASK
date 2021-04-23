@@ -89,4 +89,22 @@ class PostController extends Controller
             ]);
         }
     }
+
+    public function destroy($id)
+    {
+        $post = Post::findOrFail($id);   
+        if(Auth::user()->id == $post->user_id) 
+        {
+            $post->delete();
+            return response()->json([
+                'error' => false,
+                'message' => 'Post Deleted Successfully'
+            ]);
+        } else {
+            return response()->json([
+                'error' => true,
+                'message' => 'Unauthorized Access'
+            ]);
+        }
+    }
 }

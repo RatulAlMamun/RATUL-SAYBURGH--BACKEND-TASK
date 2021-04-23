@@ -30,6 +30,7 @@ Route::middleware(['api'])->group(function () {
         Route::post('store', [PostController::class, 'store']);
         Route::put('update/{id}', [PostController::class, 'update']);
         Route::get('show/{id}', [PostController::class, 'show']);
+        Route::delete('destroy/{id}', [PostController::class, 'destroy']);
     });
    
 });
