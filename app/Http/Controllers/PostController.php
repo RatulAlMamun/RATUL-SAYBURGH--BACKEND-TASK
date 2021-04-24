@@ -23,6 +23,7 @@ class PostController extends Controller
         foreach ($posts as $post)
         {
             $post->comments;
+            $post->tags;
             foreach($post->comments as $comment)
             {
                 $comment->replies;
@@ -47,6 +48,7 @@ class PostController extends Controller
         try {
             $post = Post::where('id', $id)->where('user_id', Auth::user()->id)->firstOrFail();
             $post->comments;
+            $post->tags;
             foreach($post->comments as $comment)
             {
                 $comment->replies;
@@ -80,7 +82,7 @@ class PostController extends Controller
         $post->description = $request->description;
         $post->image = $image;
         $post->save();
-        $post->tags()->sync($request->tags);
+        $post->tags()->attach($request->tags);
         return response()->json([
             'error' => false,
             "message" => "Post Created Successfully"
@@ -99,7 +101,8 @@ class PostController extends Controller
             }
             $posts->title = $request->title;
             $posts->description = $request->description;
-            $posts->update();   
+            $posts->update();
+            $posts->tags()->sync($request->tags);
             return response()->json([
                 'error' => false,
                 'message' => 'Post Updated Successfully'
@@ -114,18 +117,30 @@ class PostController extends Controller
 
     public function destroy($id)
     {
-        $post = Post::findOrFail($id);   
-        if(Auth::user()->id == $post->user_id) 
-        {
-            $post->delete();
+        try {
+            $post = Post::findOrFail($id);
+            $tagList = $post->tags;
+            if(Auth::user()->id == $post->user_id) 
+            {
+                if (!empty($tagList))
+                {
+                    $post->tags()->detach($tagList);
+                }
+                $post->delete();
+                return response()->json([
+                    'error' => false,
+                    'message' => 'Post Deleted Successfully'
+                ]);
+            } else {
+                return response()->json([
+                    'error' => true,
+                    'message' => 'Unauthorized Access'
+                ]);
+            }
+        } catch (Exception $e) {
             return response()->json([
-                'error' => false,
-                'message' => 'Post Deleted Successfully'
-            ]);
-        } else {
-            return response()->json([
-                'error' => true,
-                'message' => 'Unauthorized Access'
+                'errors'=> true,
+                'message'=> $e->getMessage()
             ]);
         }
     }
